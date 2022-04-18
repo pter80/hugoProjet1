@@ -9,7 +9,7 @@ class MovieController extends Controller
 
 {
   //=============================================================================================
-  static function sortPopularity ($a,$b){
+  static function sortPopularity ($a,$b){ //va trier par ordre de popularité décroissant
     if ($a->getPopularity()==$b->getPopularity()) {
       return 0;
     }
@@ -17,7 +17,7 @@ class MovieController extends Controller
     
   }
   
-   static function date_outil ($date,$nombre_jour){
+   static function date_outil ($date,$nombre_jour){ //soustrait une date. prends deux paramètres la date a soustraire et le nombre de jours qui faut soustraire
   
     $year = substr($date, 0, -6);   
     $month = substr($date, -5, -3);   
@@ -35,7 +35,9 @@ class MovieController extends Controller
  
   }
   //=================================================================================================
-  public function getMovieGenres ($params)
+  
+  //getMovieGenres recupere l'id de l'émotion, cherche les films correspondant à cette emotion, renvoie des listes de film triés
+  public function getMovieGenres ($params)  
   {
     
   
@@ -101,12 +103,11 @@ class MovieController extends Controller
      echo $this->twig->render('movieListe.twig',['movies' =>$movies, 'moviesFr' =>$moviesFr, 'moviesRecent' => $moviesRecent, 'emotionId' => $emotionId]);
   }
   
-
+  //movieDetail recupere l'Id du film et recupere des donnees relatives au film en interrogeant la Bdd et renvoie toutes les donnees du film a la vue.
   public function movieDetail ($params)
   {
     $em=$params["em"];
      
-    //var_dump($_SERVER['HTTP_REFERER']); die;
     $returnURL = $_SERVER['HTTP_REFERER'];
     $movieId = $_POST["movieId"];
     //var_dump($movieId);
@@ -130,14 +131,13 @@ class MovieController extends Controller
        $nameGenre[]= $genre->getName();
     }
     
-    //var_dump($nameGenre);
-    // TRANSFORME LE TABLEAU EN STRING
+
+    // transforme le tableau en string
     $movieGenres = implode(", ", $nameGenre);
-    //var_dump($movieGenres);
+    
     
     /*  HISTORIQUE POPULARITE */
     $dql = "select p from Entity\PopularityHistory p where p.movie='$movieId'";
-    //SELECT * FROM `popularity_history` WHERE `movie_id`=1;
     $query = $em->createQuery($dql);
     $popularities=$query->getResult();
     $arrayHistory = [];
@@ -145,7 +145,7 @@ class MovieController extends Controller
     {
       //var_dump($value->getPopularity());
       $dates = $value->getDate();
-      //var_dump($dates);
+      
       
     
       
@@ -172,7 +172,7 @@ class MovieController extends Controller
     $moviedbId = $movie->getMoviedbId();
     
     $curl = curl_init();
-
+    //requete API pour avoir trailers d'un film
     curl_setopt_array($curl, array(
     CURLOPT_URL => 'https://api.themoviedb.org/3/movie/'. $moviedbId.'/videos?api_key=6efd8c2be252b7db9eb325cd0e495624&language=fr-fr',
     CURLOPT_RETURNTRANSFER => true,
@@ -209,12 +209,12 @@ class MovieController extends Controller
     
     }
     
-    //var_dump($keyTrailer);
     
     /* CASTING FILM */
     
     $curl = curl_init();
-
+  
+    //requete API pour avoir le casting d'un film
     curl_setopt_array($curl, array(
       CURLOPT_URL => 'https://api.themoviedb.org/3/movie/'. $moviedbId.'/credits?api_key=6efd8c2be252b7db9eb325cd0e495624&language=fr-fr%0A',
       CURLOPT_RETURNTRANSFER => true,
@@ -248,7 +248,7 @@ class MovieController extends Controller
     /* MOVIE AVAILABILITY   */
     
     $curl = curl_init();
-
+    //requete API pour avoir les disponibilites d'un film
     curl_setopt_array($curl, array(
       CURLOPT_URL => 'https://api.themoviedb.org/3/movie/'. $moviedbId.'/watch/providers?api_key=6efd8c2be252b7db9eb325cd0e495624',
       CURLOPT_RETURNTRANSFER => true,

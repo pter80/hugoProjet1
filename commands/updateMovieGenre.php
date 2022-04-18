@@ -87,12 +87,6 @@ foreach ($movies as $movie){
         
     }
     
-    /*
-    if ($i > 20) {
-        break;
-    }
-    */
-    
     var_dump($condition);
     
     

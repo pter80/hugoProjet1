@@ -7,7 +7,7 @@ class EmotionController extends Controller
 
 {
   
-  public function liste($params)
+  public function liste($params) //envoie la liste des emotions de ma table Emotion
   {
     
     $em=$params["em"];

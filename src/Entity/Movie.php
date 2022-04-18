@@ -4,7 +4,7 @@ namespace Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/*
+/* REQUETE API -> donnees reçu : (recupere par Postman)
 "adult": false,
             "backdrop_path": "/o76ZDm8PS9791XiuieNB93UZcRV.jpg",
             "genre_ids": [
