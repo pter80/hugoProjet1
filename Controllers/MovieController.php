@@ -141,28 +141,24 @@ class MovieController extends Controller
     $query = $em->createQuery($dql);
     $popularities=$query->getResult();
     $arrayHistory = [];
+  
     foreach ($popularities as $value)
     {
       //var_dump($value->getPopularity());
-      $dates = $value->getDate();
-      
-      
-    
-      
-      foreach ($dates as $key => $date)
-      {
-        	if ($key == "date")
-        	{
-        	  //var_dump($date);
-        	  $dateConvert= date_create($date); // converti le string en format date pour le date_format
-        	  $dateFormat =date_format($dateConvert,"Y/m/d"); // enlève les 00:00:00.000000 après la date
-        	  $dateChange = str_replace("-",",",$dateFormat); //modifier les - pour des ,
-        	  $arrayHistory[] = [
-               $dateChange=> $value->getPopularity(),
-            ];
-        	}
+      $arrayDate = (array) $value->getDate(); //transforme $value->getDate() en tableau
+      foreach($arrayDate as $key => $date){
+        if ($key == "date")
+        {
+          $dateConvert= date_create($date); // converti le string en format date pour le date_format
+      	  $dateFormat =date_format($dateConvert,"Y/m/d"); // enlève les 00:00:00.000000 après la date
+      	  $dateChange = str_replace("-",",",$dateFormat); //modifier les - pour des ,
+      	  $arrayHistory[] = [
+             $dateChange=> $value->getPopularity(),
+          ];
+        }
       }
     }
+    
     //var_dump($arrayHistory);
     
     
